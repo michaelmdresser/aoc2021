@@ -1,5 +1,7 @@
 import strutils
 
+import util
+
 type
   Position = object
     horizontal, depth: int
@@ -37,22 +39,13 @@ func processCommand2(current: Position2, cmd: Command): Position2 =
 
   return updated
 
-
-proc fileToCommands(filename: string): seq[Command] =
-  let f = open(fileName)
-  defer: f.close()
-
-  var commands = newSeq[Command]()
-  var line: string
-  while f.read_line(line):
-    let sp = split(line, " ")
-    commands.add(Command(kind: sp[0], amount: parseInt(sp[1])))
-
-  return commands
+proc lineToCommand(line: string): Command =
+  let sp = split(line, " ")
+  return Command(kind: sp[0], amount: parseInt(sp[1]))
 
 proc day2*(filename: string): int =
   let start = Position()
-  let commands = fileToCommands(filename)
+  let commands = fileLinesToType[Command](filename, lineToCommand)
   var pos = start
   for command in commands:
     pos = processCommand(pos, command)
@@ -61,7 +54,7 @@ proc day2*(filename: string): int =
 
 proc day2_2*(filename: string): int =
   let start = Position2()
-  let commands = fileToCommands(filename)
+  let commands = fileLinesToType[Command](filename, lineToCommand)
   var pos = start
   for command in commands:
     pos = processCommand2(pos, command)

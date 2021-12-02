@@ -1,5 +1,7 @@
 import std/strutils
 
+import util
+
 proc numberOfIncreases*(numbers: seq[int]): int =
   result = 0
   for i in 1 ..< numbers.len:
@@ -14,19 +16,8 @@ proc numberOfSlidingIncreases(numbers: seq[int]): int =
 
   return numberOfIncreases(threedaysums)
 
-proc fileToInts(filename: string): seq[int] =
-  let f = open(fileName)
-  defer: f.close()
-
-  var numbers = newSeq[int]()
-  var line: string
-  while f.read_line(line):
-    numbers.add(parseInt(line))
-
-  return numbers
-
 proc day1*(filename: string): int =
-  return numberOfIncreases(fileToInts(filename))
+  return numberOfIncreases(fileLinesToType[int](filename, parseInt))
 
 proc day1_2*(fileName: string): int =
-  return numberOfSlidingIncreases(fileToInts(filename))
+  return numberOfSlidingIncreases(fileLinesToType[int](filename, parseInt))
