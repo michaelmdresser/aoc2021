@@ -30,17 +30,11 @@ proc day3*(filename: string): int =
   let lineCount = bitMatrix.len
   let columnCount = bitMatrix[0].len
 
-  echo "First row:", bitMatrix[0]
-  echo "Second ro:", bitMatrix[1]
-
   var mostCommonBits = newSeq[bool]()
   for column in 0..<columnCount:
     mostCommonBits.add(mostCommonBitForColumn(bitMatrix, column))
 
   let leastCommonBits: seq[bool] = map(mostCommonBits, proc(x: bool): bool = not x)
-
-  echo "Most common bits:", mostCommonBits
-  echo "Least common bits:", leastCommonBits
 
   let gammaRate: int = bitVectorToDecimal(mostCommonBits)
   let epsilonRate: int = bitVectorToDecimal(leastCommonBits)
