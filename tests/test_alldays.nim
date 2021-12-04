@@ -2,6 +2,7 @@ import unittest
 import aoc2021pkg/day1
 import aoc2021pkg/day2
 import aoc2021pkg/day3
+import aoc2021pkg/day4
 
 # Once I have confirmed my solution to a problem, I'll add a unit test here.
 # These test are dependent on the input which is committed in this repo. They
@@ -30,3 +31,9 @@ suite "day 3":
     check day3(filename) == 1071734
   test "part 2":
     check day3_2(filename) == 6124992
+
+suite "day 4":
+  setup:
+    let filename = "./problem_input/day4/input.txt"
+  test "part 1":
+    check day4(filename) == 44736

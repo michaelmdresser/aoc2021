@@ -31,6 +31,21 @@ proc hasBingo*(board: BingoBoard): bool =
 
   return false
 
+proc unmarkedSum*(board: BingoBoard): int =
+  for row in 0..<board.numbers.len:
+    for column in 0..<board.numbers[row].len:
+      if not board.marked[row][column]:
+        result += board.numbers[row][column]
+
+proc updateForDraw*(board: BingoBoard, draw: int): BingoBoard =
+  var board = board # shadow so we can update
+  for row in 0..<board.numbers.len:
+    for column in 0..<board.numbers[row].len:
+      if board.numbers[row][column] == draw:
+        board.marked[row][column] = true
+        return board
+
+  return board
 
 proc loadInput*(filename: string): (seq[int], seq[BingoBoard]) =
   let file = open(filename)
@@ -68,6 +83,13 @@ proc loadInput*(filename: string): (seq[int], seq[BingoBoard]) =
   return (draws, boards)
 
 
-
 proc day4*(filename: string): int =
-  let (draws, boards) = loadInput(filename)
+  var (draws, boards) = loadInput(filename)
+
+  for draw in draws:
+    for idx, board in boards.pairs:
+      let newBoard = board.updateForDraw(draw)
+      boards[idx] = newBoard
+
+      if newBoard.hasBingo():
+        return newBoard.unmarkedSum() * draw
