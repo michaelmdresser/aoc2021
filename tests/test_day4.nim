@@ -81,5 +81,8 @@ suite "day 4 example":
       @[1, 12, 20, 15, 19],
     ]
 
-  test "full execution":
+  test "part 1":
     check day4("./problem_input/day4/example.txt") == 4512
+
+  test "part 2":
+    check day4_2("./problem_input/day4/example.txt") == 1924

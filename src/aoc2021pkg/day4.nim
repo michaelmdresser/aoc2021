@@ -93,3 +93,21 @@ proc day4*(filename: string): int =
 
       if newBoard.hasBingo():
         return newBoard.unmarkedSum() * draw
+
+proc day4_2*(filename: string): int =
+  var (draws, boards) = loadInput(filename)
+
+  while true:
+    # update boards for the next draw
+    boards = map(boards, proc (b: BingoBoard): BingoBoard = updateForDraw(b, draws[0]))
+
+    # once we're on the last board, we only want to update the last
+    # board, not filter it out
+    if boards.len > 1:
+      # filter out boards that have bingo
+      boards = filter(boards, proc (b: BingoBoard): bool = not hasBingo(b))
+
+    if boards.len == 1 and boards[0].hasBingo:
+      return draws[0] * boards[0].unmarkedSum()
+
+    draws = draws[1..^1]

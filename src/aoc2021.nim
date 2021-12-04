@@ -14,3 +14,4 @@ when isMainModule:
   echo("Day 3_2: ", day3_2("./problem_input/day3/day3input.txt"))
 
   echo("Day 4: ", day4("./problem_input/day4/input.txt"))
+  echo("Day 4_2: ", day4_2("./problem_input/day4/input.txt"))
