@@ -29,18 +29,6 @@ suite "day 5 utils":
     let s = lineToSegment("5,2 -> 7,3")
     check s.isHorizontal or s.isVertical == false
 
-  test "int * point":
-    check 5 * nPoint(1, 2) == nPoint(5, 10)
-
-  test "point + point":
-    check nPoint(1, 5) + nPoint(9, 20) == nPoint(10, 25)
-
-  test "point - point":
-    check nPoint(3, 7) - nPoint(1, 14) == nPoint(2, -7)
-
-  test "vector cross product":
-    check nPoint(3, 7) * nPoint(2, 3) == (9 - 14)
-
   test "markGridWithSegment horiz":
     let grid: seq[seq[int]] = @[
       @[0, 0, 0],
