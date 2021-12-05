@@ -5,6 +5,9 @@ import unittest
 suite "example":
   test "part 1":
     check day5("./problem_input/day5/example.txt") == 5
+  test "part 2":
+    let overlaps = day5_2("./problem_input/day5/example.txt")
+    check overlaps == 12
 
 suite "day 5 utils":
   test "lineToSegment":
@@ -38,7 +41,7 @@ suite "day 5 utils":
   test "vector cross product":
     check nPoint(3, 7) * nPoint(2, 3) == (9 - 14)
 
-  test "markGridWithHVSegment horiz":
+  test "markGridWithSegment horiz":
     let grid: seq[seq[int]] = @[
       @[0, 0, 0],
       @[0, 0, 0],
@@ -58,4 +61,51 @@ suite "day 5 utils":
       @[0, 1, 0],
     ]
 
-    check markGridWithHVSegment(grid, s) == expectedGrid
+    check markGridWithSegment(grid, s) == expectedGrid
+
+  test "markGridWithSegment diag":
+    let grid: seq[seq[int]] = @[
+      @[0, 0, 0],
+      @[0, 0, 0],
+      @[0, 0, 0],
+    ]
+
+    let s = Segment(
+      p1: nPoint(1, 0),
+      p2: nPoint(0, 1),
+    )
+
+    # this is transposed because i do [x][y] but the way the
+    # lists work it looks like [y][x]
+    let expectedGrid: seq[seq[int]] = @[
+      @[0, 1, 0],
+      @[1, 0, 0],
+      @[0, 0, 0],
+    ]
+
+    let marked = markGridWithSegment(grid, s)
+
+    check marked == expectedGrid
+
+
+  test "markGridWithSegment reverse":
+    let grid: seq[seq[int]] = @[
+      @[0, 0, 0],
+      @[0, 0, 0],
+      @[0, 0, 0],
+    ]
+
+    let s = Segment(
+      p1: nPoint(1, 2),
+      p2: nPoint(2, 1),
+    )
+
+    # this is transposed because i do [x][y] but the way the
+    # lists work it looks like [y][x]
+    let expectedGrid: seq[seq[int]] = @[
+      @[0, 0, 0],
+      @[0, 0, 1],
+      @[0, 1, 0],
+    ]
+
+    check markGridWithSegment(grid, s) == expectedGrid

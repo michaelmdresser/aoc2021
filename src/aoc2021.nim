@@ -18,4 +18,4 @@ when isMainModule:
   echo("Day 4_2: ", day4_2("./problem_input/day4/input.txt"))
 
   echo("Day 5: ", day5("./problem_input/day5/input.txt"))
-  # echo("Day 5_2: ", day5_2("./problem_input/day5/input.txt"))
+  echo("Day 5_2: ", day5_2("./problem_input/day5/input.txt"))
