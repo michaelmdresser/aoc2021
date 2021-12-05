@@ -1,5 +1,6 @@
 import sequtils
 import strutils
+import tables
 
 import util
 
@@ -29,103 +30,56 @@ proc lineToSegment*(line: string): Segment =
 proc isHorizontal*(s: Segment): bool = s.p1.y == s.p2.y
 proc isVertical*(s: Segment): bool = s.p1.x == s.p2.x
 
+proc countSegment*(counts: var CountTable[(int, int)], s: Segment) =
+  # the _much_ better way of doing this
+  var dx = 1
+  var dy = 1
 
-proc markGridWithSegment*(grid: seq[seq[int]], s: Segment): seq[seq[int]] =
-  var grid = grid
+  var x = s.p1.x
+  var y = s.p1.y
 
-  if s.isHorizontal or s.isVertical:
-    for x in countup(min(s.p1.x, s.p2.x), max(s.p1.x, s.p2.x)):
-      for y in countup(min(s.p1.y, s.p2.y), max(s.p1.y, s.p2.y)):
-        grid[x][y] += 1
-  else:
-    let min_x = min(s.p1.x, s.p2.x)
-    let min_y = min(s.p1.y, s.p2.y)
+  if s.p1.x == s.p2.x:
+    dx = 0
+  elif s.p1.x > s.p2.x:
+    dx = -1
 
-    # this is overly complex due to the diagonal constraint
-    # it could just be abs(s.p1.x - s.p2.x)
-    let steps = max(abs(s.p1.x - s.p2.x), abs(s.p1.y - s.p2.y))
+  if s.p1.y == s.p2.y:
+    dy = 0
+  elif s.p1.y > s.p2.y:
+    dy = -1
 
-    if s.p2.x >= s.p1.x and s.p2.y >= s.p1.y:
-      for step in 0..steps:
-        grid[s.p1.x + step][s.p1.y + step] += 1
-    elif s.p2.x >= s.p1.x and s.p2.y < s.p1.y:
-      for step in 0..steps:
-        grid[s.p1.x + step][s.p1.y - step] += 1
-    elif s.p2.x < s.p1.x and s.p2.y >= s.p1.y:
-      for step in 0..steps:
-        grid[s.p1.x - step][s.p1.y + step] += 1
-    elif s.p2.x < s.p1.x and s.p2.y < s.p1.y:
-      for step in 0..steps:
-        grid[s.p1.x - step][s.p1.y - step] += 1
-
-  return grid
-
-proc transpose*(g: seq[seq[int]]): seq[seq[int]] =
-  result = repeat(repeat(0, g.len), g[0].len)
-  for x in 0..<g.len:
-    for y in 0..<g[x].len:
-      result[y][x] = g[x][y]
-
-proc pretty*(grid: seq[seq[int]]): string =
-  var s = ""
-  for row in transpose(grid):
-    for overlaps in row:
-      if overlaps > 0:
-        s.add($overlaps)
-      else:
-        s.add(".")
-
-    s.add("\n")
-
-  return s
+  # add dx and dy to make the loop break AFTER all points in the line
+  # have been added
+  while (x, y) != (s.p2.x + dx, s.p2.y + dy):
+    counts.inc((x, y))
+    x += dx
+    y += dy
 
 proc day5*(filename: string): int =
   let segments: seq[Segment] = fileLinesToType[Segment](filename, lineToSegment)
   let hvFiltered: seq[Segment] = filter(segments, proc(s: Segment): bool = s.isVertical or s.isHorizontal)
-
-  var max_x = 0
-  var max_y = 0
-  for seg in hvFiltered:
-    max_x = max(max(max_x, seg.p1.x), seg.p2.x)
-    max_y = max(max(max_y, seg.p1.y), seg.p2.y)
-
-  # +1 because the max should be a viable index
-  var overlappingGrid: seq[seq[int]] = repeat(repeat(0, max_y + 1), max_x + 1)
+  var overlapCounts = initCountTable[(int, int)]()
 
   for s in hvFiltered:
-    overlappingGrid = markGridWithSegment(overlappingGrid, s)
+    countSegment(overlapCounts, s)
 
   var overlaps = 0
-  for x in 0..<overlappingGrid.len:
-    for y in 0..<overlappingGrid[x].len:
-      if overlappingGrid[x][y] > 1:
-        overlaps += 1
+  for _, count in overlapCounts:
+    if count > 1:
+      overlaps += 1
 
   return overlaps
 
 proc day5_2*(filename: string): int =
   let segments: seq[Segment] = fileLinesToType[Segment](filename, lineToSegment)
-
-  var max_x = 0
-  var max_y = 0
-  for seg in segments:
-    max_x = max(max(max_x, seg.p1.x), seg.p2.x)
-    max_y = max(max(max_y, seg.p1.y), seg.p2.y)
-
-  # +1 because the max should be a viable index
-  var overlappingGrid: seq[seq[int]] = repeat(repeat(0, max_y + 1), max_x + 1)
+  var overlapCounts = initCountTable[(int, int)]()
 
   for s in segments:
-    overlappingGrid = markGridWithSegment(overlappingGrid, s)
-
-  # echo "grid"
-  # for row in overlappingGrid:
-  #   echo row
+    countSegment(overlapCounts, s)
 
   var overlaps = 0
-  for x in 0..<overlappingGrid.len:
-    for y in 0..<overlappingGrid[x].len:
-      if overlappingGrid[x][y] > 1:
-        overlaps += 1
+  for _, count in overlapCounts:
+    if count > 1:
+      overlaps += 1
 
   return overlaps

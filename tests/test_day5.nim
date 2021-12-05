@@ -1,6 +1,7 @@
 import aoc2021pkg/day5
 
 import unittest
+import tables
 
 suite "example":
   test "part 1":
@@ -29,71 +30,36 @@ suite "day 5 utils":
     let s = lineToSegment("5,2 -> 7,3")
     check s.isHorizontal or s.isVertical == false
 
-  test "markGridWithSegment horiz":
-    let grid: seq[seq[int]] = @[
-      @[0, 0, 0],
-      @[0, 0, 0],
-      @[0, 0, 0],
-    ]
-
+  test "countSegment horiz":
     let s = Segment(
       p1: nPoint(1, 1),
       p2: nPoint(2, 1),
     )
 
-    # this is transposed because i do [x][y] but the way the
-    # lists work it looks like [y][x]
-    let expectedGrid: seq[seq[int]] = @[
-      @[0, 0, 0],
-      @[0, 1, 0],
-      @[0, 1, 0],
-    ]
+    var counts = initCountTable[(int, int)]()
+    countSegment(counts, s)
+    check counts[(1, 1)] == 1
+    check counts[(2, 1)] == 1
 
-    check markGridWithSegment(grid, s) == expectedGrid
-
-  test "markGridWithSegment diag":
-    let grid: seq[seq[int]] = @[
-      @[0, 0, 0],
-      @[0, 0, 0],
-      @[0, 0, 0],
-    ]
-
+  test "countSegment diag":
     let s = Segment(
       p1: nPoint(1, 0),
       p2: nPoint(0, 1),
     )
 
-    # this is transposed because i do [x][y] but the way the
-    # lists work it looks like [y][x]
-    let expectedGrid: seq[seq[int]] = @[
-      @[0, 1, 0],
-      @[1, 0, 0],
-      @[0, 0, 0],
-    ]
-
-    let marked = markGridWithSegment(grid, s)
-
-    check marked == expectedGrid
+    var counts = initCountTable[(int, int)]()
+    countSegment(counts, s)
+    check counts[(1, 0)] == 1
+    check counts[(0, 1)] == 1
 
 
-  test "markGridWithSegment reverse":
-    let grid: seq[seq[int]] = @[
-      @[0, 0, 0],
-      @[0, 0, 0],
-      @[0, 0, 0],
-    ]
-
+  test "countSegment reverse":
     let s = Segment(
       p1: nPoint(1, 2),
       p2: nPoint(2, 1),
     )
 
-    # this is transposed because i do [x][y] but the way the
-    # lists work it looks like [y][x]
-    let expectedGrid: seq[seq[int]] = @[
-      @[0, 0, 0],
-      @[0, 0, 1],
-      @[0, 1, 0],
-    ]
-
-    check markGridWithSegment(grid, s) == expectedGrid
+    var counts = initCountTable[(int, int)]()
+    countSegment(counts, s)
+    check counts[(1, 2)] == 1
+    check counts[(2, 1)] == 1
