@@ -31,3 +31,6 @@ proc day6*(filename: string, days: int = 80): int =
     total_fish += fish
 
   return total_fish
+
+proc day6_2*(filename: string): int =
+  return day6(filename, days=256)
