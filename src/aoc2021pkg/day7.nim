@@ -31,11 +31,9 @@ proc day7*(filename: string): int =
 
 proc day7_2*(filename: string): int =
   proc fuel_required(pos1, pos2: int): int =
-    var s = 0
-    for step in 1..abs(pos1 - pos2):
-      s += step
-
-    return s
+    # triangular numbers
+    let n = abs(pos1 - pos2)
+    return n * (n + 1) div 2
 
   let starting_positions: seq[int] = fileFirstLineToInts(filename)
   var count_for_position = initCountTable[int]()
@@ -45,7 +43,7 @@ proc day7_2*(filename: string): int =
   let min_position: int = min(starting_positions)
   let max_position: int = max(starting_positions)
 
-  proc total_fuel_required(target: int, count_for_position: CountTable[int]): int =
+  proc total_fuel_required(target: int, count_for_position: var CountTable[int]): int =
     var s = 0
     for position, count in count_for_position:
       s += count * fuel_required(position, target)
