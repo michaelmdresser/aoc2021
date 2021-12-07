@@ -1,6 +1,7 @@
 import sequtils
 import math
 import std/algorithm
+import tables
 
 import util
 
@@ -37,17 +38,25 @@ proc day7_2*(filename: string): int =
     return s
 
   let starting_positions: seq[int] = fileFirstLineToInts(filename)
+  var count_for_position = initCountTable[int]()
+  for pos in starting_positions:
+    count_for_position.inc(pos)
+
   let min_position: int = min(starting_positions)
   let max_position: int = max(starting_positions)
 
-  proc total_fuel_required(target: int, starts: seq[int]): int =
-    foldl(starts, a + fuel_required(target, b), 0)
+  proc total_fuel_required(target: int, count_for_position: CountTable[int]): int =
+    var s = 0
+    for position, count in count_for_position:
+      s += count * fuel_required(position, target)
+
+    return s
 
   var best_position = min_position
-  var best_fuel = total_fuel_required(min_position, starting_positions)
+  var best_fuel = total_fuel_required(min_position, count_for_position)
 
   for target in min_position..max_position:
-    let fuel_cost = total_fuel_required(target, starting_positions)
+    let fuel_cost = total_fuel_required(target, count_for_position)
     if fuel_cost < best_fuel:
       best_fuel = fuel_cost
       best_position = target
