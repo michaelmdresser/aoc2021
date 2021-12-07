@@ -4,6 +4,8 @@ import unittest
 suite "example":
   test "part 1":
     check day7("./problem_input/day7/example.txt") == 37
+  test "part 2":
+    check day7_2("./problem_input/day7/example.txt") == 168
 
 
 suite "median":

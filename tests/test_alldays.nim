@@ -65,3 +65,5 @@ suite "day 7":
     let filename = "./problem_input/day7/input.txt"
   test "part 1":
     check day7(filename) == 354129
+  test "part 2":
+    check day7_2(filename) == 98905973
