@@ -4,6 +4,7 @@ import aoc2021pkg/day3
 import aoc2021pkg/day4
 import aoc2021pkg/day5
 import aoc2021pkg/day6
+import aoc2021pkg/day7
 
 when isMainModule:
   echo("Day 1: ", day1("./problem_input/day1/day1input.txt"))
@@ -23,3 +24,6 @@ when isMainModule:
 
   echo("Day 6: ", day6("./problem_input/day6/input.txt"))
   echo("Day 6_2: ", day6_2("./problem_input/day6/input.txt"))
+
+  echo("Day 7: ", day7("./problem_input/day7/input.txt"))
+  # echo("Day 7_2: ", day7_2("./problem_input/day7/input.txt"))
